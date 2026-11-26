@@ -1,0 +1,1030 @@
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>روبان | نسخه نمایشی پنل مشتری</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/customer.css">
+    <style>
+        .ruban-demo-notice{background:#e8f6ef;color:#145b45;border:1px solid #b9e4ce;border-radius:10px;padding:10px 16px;margin:12px auto;max-width:1200px;text-align:center;font-size:13px}
+        .demo-form-actions{display:flex;justify-content:flex-start;gap:12px;margin:22px 0 8px}
+        .demo-sample-tag{display:inline-block;margin-inline-start:8px;padding:3px 8px;border-radius:20px;background:#edf6f1;color:#28745b;font-size:11px}
+        .demo-chat-message{max-width:82%;padding:10px 14px;border-radius:12px;margin:8px 0;background:#f0f5f2}
+        .demo-chat-message.mine{margin-right:auto;background:#dff4e9}
+        .demo-chat-message small{display:block;margin-top:5px;color:#718078;font-size:10px}
+        .demo-notification-item,.demo-atelier-item{cursor:pointer}
+        .demo-notification-item:hover,.demo-atelier-item:hover{border-color:#20b486}
+    </style>
+    <link
+    rel="stylesheet"
+    href="https://unpkg.com/@majidh1/jalalidatepicker/dist/jalalidatepicker.min.css"
+>
+    <script>
+    (function () {
+        const savedSection = sessionStorage.getItem(
+            "rubanCustomerActiveSection"
+        );
+
+        if (savedSection && savedSection !== "home") {
+            document.documentElement.classList.add(
+                "restore-customer-section"
+            );
+        }
+    })();
+</script>
+
+<style>
+    .restore-customer-section #homeView {
+        display: none !important;
+    }
+</style>
+</head>
+
+<body class="customer-page demo-customer-page">
+    <div class="ruban-demo-notice" role="status">نسخه نمایشی روبان — اطلاعات این صفحه آزمایشی است و در سامانه اصلی ثبت نمی‌شود.</div>
+
+    <header class="customer-header">
+        <div class="brand">
+            <span class="brand-name">روبان</span>
+            <span class="brand-slogan">متفاوت بپوش</span>
+        </div>
+
+        <div class="header-actions">
+            <button
+                class="icon-button notification-button"
+                id="notificationButton"
+                aria-label="اعلان‌ها"
+                type="button"
+            >
+                <span aria-hidden="true">♧</span>
+                <span
+                    class="notification-badge"
+                    id="headerUnreadNotificationsCount"
+                    hidden
+                >0</span>
+            </button>
+
+            <div class="user-avatar" id="headerAvatar">م</div>
+        </div>
+    </header>
+
+    <div class="customer-layout">
+
+        <aside class="customer-sidebar">
+            <div class="sidebar-user">
+                <div class="user-avatar large" id="sidebarAvatar">م</div>
+                <div>
+                    <strong id="customerName">مشتری عزیز</strong>
+                    <small>خوش آمدید</small>
+                </div>
+            </div>
+
+            <nav class="customer-nav">
+    <a href="#" class="nav-item active" data-section="home">
+        ⌂ <span>صفحه اصلی</span>
+    </a>
+
+   <button
+    type="button"
+    class="nav-item"
+    data-section="orderForm"
+>
+    ＋ <span>ثبت سفارش</span>
+</button>
+    <a href="#" class="nav-item" data-section="tracking">
+        ◷ <span>پیگیری سفارش</span>
+    </a>
+
+    <a href="#" class="nav-item" data-section="notifications">
+    ♧ <span>اعلان‌ها</span>
+</a>
+
+<a href="#" class="nav-item" data-section="messages">
+    ✉ <span>گفت‌وگو با مزون</span>
+    <span id="customer-unread-messages-badge" hidden>۰</span>
+</a>
+
+    <a href="#" class="nav-item" data-section="ateliers">
+        ⌕ <span>جستجوی مزون</span>
+    </a>
+
+    <a href="#" class="nav-item" data-section="profile">
+        ♙ <span>پروفایل من</span>
+    </a>
+
+    <button id="customer-logout" type="button" class="nav-item">
+        ↪ <span>خروج از حساب</span>
+    </button>
+</nav>
+
+            <div class="sidebar-footer">
+    <span>روبان</span>
+    <small>تجربه‌ای متفاوت در دنیای پوشاک</small>
+
+</div>
+        </aside>
+
+        <main class="customer-main">
+
+            <!-- Home -->
+            <div id="homeView">
+
+                <section class="welcome-section">
+                    <div>
+                        <span class="eyebrow">به دنیای روبان خوش آمدید</span>
+                        <h1>لباس دلخواهتان را بسازید.</h1>
+                        <p>از انتخاب مزون تا تحویل لباس، همه چیز در روبان کنار شماست.</p>
+
+   <button
+    type="button"
+    class="primary-button"
+    data-section="orderForm"
+>
+    شروع ثبت سفارش
+</button>
+                    </div>
+                </section>
+
+                <section class="stats-section">
+                    <div class="stat-card">
+                        <span>سفارش‌های فعال</span>
+                        <strong id="activeOrdersCount">۰</strong>
+                    </div>
+
+                    <div class="stat-card">
+                        <span>سفارش‌های تکمیل‌شده</span>
+                        <strong id="completedOrdersCount">۰</strong>
+                    </div>
+
+                </section>
+
+                <section class="content-section">
+                    <div class="section-heading">
+                        <div>
+                            <span class="eyebrow">سفارش‌های شما</span>
+                            <h2>آخرین سفارش‌ها</h2>
+                        </div>
+                        <a href="#" data-section="tracking">مشاهده همه</a>
+                    </div>
+
+                    <div id="latestOrdersContainer">
+                        <div class="empty-state">
+                            <h3>در حال دریافت سفارش‌ها...</h3>
+                            <p>لطفاً کمی صبر کنید.</p>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+
+            <!-- Order Tracking -->
+            <section id="trackingView" class="content-section" hidden>
+                <div class="section-heading">
+                    <div>
+                        <span class="eyebrow">مدیریت سفارش‌ها</span>
+                        <h2>پیگیری سفارش‌های من</h2>
+                    </div>
+                </div>
+
+                <p>در این بخش می‌توانید وضعیت و جزئیات تمام سفارش‌های خود را مشاهده کنید.</p>
+
+                <div id="allOrdersContainer">
+                    <div class="empty-state">
+                        <h3>در حال دریافت سفارش‌ها...</h3>
+                        <p>لطفاً کمی صبر کنید.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- All Notifications -->
+            <section id="notificationsView" class="content-section" hidden>
+                <div class="section-heading">
+                    <div>
+                        <span class="eyebrow">اطلاع‌رسانی روبان</span>
+                        <h2>اعلان‌های من</h2>
+                    </div>
+                </div>
+
+                <div id="allNotificationsContainer">
+                    <div class="empty-state">
+                        <p>در حال دریافت اعلان‌ها...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Customer Messages -->
+<section id="messagesView" class="content-section" hidden>
+
+    <div class="section-heading">
+        <div>
+            <span class="eyebrow">ارتباط مستقیم با مزون</span>
+            <h2>گفت‌وگوهای من</h2>
+        </div>
+    </div>
+
+    <div class="customer-messages-layout">
+
+        <div
+            id="customer-chat-list"
+            class="customer-chat-list"
+            aria-live="polite"
+        >
+            <p class="empty-state">در حال دریافت گفت‌وگوها...</p>
+        </div>
+
+        <div
+            id="customer-chat-placeholder"
+            class="customer-chat-placeholder"
+        >
+            <h3>گفت‌وگویی انتخاب نشده است</h3>
+            <p>برای مشاهده پیام‌ها، یک مزون را انتخاب کنید.</p>
+        </div>
+
+       <div id="customer-chat-content" class="customer-chat-content" hidden>
+
+    <div class="customer-chat-header">
+        <div>
+            <h3 id="customer-chat-name">نام مزون</h3>
+            <p id="customer-chat-description">گفت‌وگوی مستقیم با مزون</p>
+        </div>
+    </div>
+
+    <div
+        id="customer-chat-messages"
+        class="customer-chat-messages"
+        aria-live="polite"
+    >
+        <p class="empty-state">در حال دریافت پیام‌ها...</p>
+    </div>
+
+   
+<form id="customer-chat-form" class="customer-chat-form">
+
+    <textarea
+        id="customer-chat-input"
+        placeholder="پیام خود را بنویسید..."
+        rows="2"
+        maxlength="5000"
+        required
+    ></textarea>
+
+    <button
+        type="button"
+        id="customer-chat-record"
+        class="customer-chat-record-button"
+    >
+        ضبط صدا
+    </button>
+
+    <button type="submit" id="customer-chat-send">
+        ارسال پیام
+    </button>
+
+    <p id="customer-chat-status" role="status"></p>
+
+</form>
+
+
+</div>
+
+    </div>
+
+</section>
+
+            <!-- Notification Details -->
+            <section
+                id="notificationDetailView"
+                class="content-section notification-detail-view"
+                hidden
+            >
+                <div class="section-heading">
+                    <div>
+                        <span class="eyebrow">اطلاع‌رسانی روبان</span>
+                        <h2>جزئیات اعلان</h2>
+                    </div>
+
+                    <button
+                        type="button"
+                        class="secondary-button"
+                        id="notificationBackButton"
+                    >
+                        بازگشت به اعلان‌ها
+                    </button>
+                </div>
+
+                <article class="notification-detail-card">
+                    <div class="notification-detail-header">
+                        <h3 id="notificationDetailTitle">عنوان اعلان</h3>
+                        <span id="notificationDetailStatus"></span>
+                    </div>
+
+                    <p
+                        id="notificationDetailDate"
+                        class="notification-detail-date"
+                    ></p>
+
+                    <div
+                        id="notificationDetailBody"
+                        class="notification-detail-body"
+                    ></div>
+                </article>
+            </section>
+
+            <!-- Atelier Search -->
+            <section id="ateliersView" class="content-section" hidden>
+
+                <div class="section-heading">
+                    <div>
+                        <span class="eyebrow">انتخاب مزون موردنظر</span>
+                        <h2>جستجوی مزون</h2>
+                    </div>
+                </div>
+
+                <div class="atelier-search-box">
+                    <input
+                        type="search"
+                        id="atelierSearchInput"
+                        placeholder="نام مزون موردنظر را وارد کنید..."
+                        maxlength="100"
+                        autocomplete="off"
+                    >
+
+                    <button type="button" id="atelierSearchButton">
+                        جستجو
+                    </button>
+                </div>
+
+                <div id="atelierSearchResults">
+                    <div class="empty-state">
+                        <p>در حال دریافت مزون‌های فعال...</p>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- Atelier Details -->
+            <section id="atelierDetailView" class="content-section" hidden>
+
+                <div class="section-heading">
+                    <div>
+                        <span class="eyebrow">معرفی و اطلاعات مزون</span>
+                        <h2 id="atelierDetailName">جزئیات مزون</h2>
+                    </div>
+                </div>
+
+                <div class="atelier-detail-card">
+
+                    <div class="atelier-detail-header">
+                        <div>
+                            <span class="eyebrow">مزون انتخاب‌شده</span>
+                            <h3 id="atelierDetailTitle"></h3>
+                        </div>
+                    </div>
+
+                    <div class="atelier-detail-description">
+                        <h4>درباره مزون</h4>
+                        <p id="atelierDetailDescription">
+                            در حال دریافت اطلاعات مزون...
+                        </p>
+                    </div>
+
+                    <div class="atelier-detail-meta">
+                        <span>عضویت در روبان:</span>
+                        <strong id="atelierDetailCreatedAt">-</strong>
+                    </div>
+
+                    <div class="atelier-detail-actions">
+
+    <button
+        type="button"
+        class="primary-button"
+        id="atelierDetailOrderButton"
+    >
+        ثبت سفارش در این مزون
+    </button>
+
+    <button
+        type="button"
+        class="secondary-button"
+        id="atelierDetailMessageButton"
+    >
+        ارسال پیام به مزون
+    </button>
+
+    <button
+        type="button"
+        class="secondary-button"
+        id="atelierDetailBackButton"
+    >
+        بازگشت به جستجوی مزون‌ها
+    </button>
+
+</div>
+
+                    <form id="atelierOrderForm" class="atelier-order-form" hidden>
+                        <h3>ثبت سفارش جدید</h3>
+
+                        <div class="form-group">
+                            <label for="atelierOrderTitle">عنوان سفارش</label>
+                            <input
+                                type="text"
+                                id="atelierOrderTitle"
+                                maxlength="150"
+                                required
+                                placeholder="مثلاً دوخت مانتو مجلسی"
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="atelierOrderType">نوع سفارش</label>
+                            <select id="atelierOrderType" required>
+                                <option value="">انتخاب نوع سفارش</option>
+                                <option value="custom">دوخت سفارشی</option>
+                                <option value="semi_custom">دوخت نیمه‌سفارشی</option>
+                                <option value="alteration">تعمیر و تغییر لباس</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="atelierOrderNotes">توضیحات سفارش</label>
+                            <textarea
+                                id="atelierOrderNotes"
+                                rows="5"
+                                maxlength="3000"
+                                placeholder="جزئیات، اندازه‌ها و خواسته‌های خود را بنویسید..."
+                            ></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="atelierOrderDeliveryDate">تاریخ تحویل درخواستی</label>
+                            <input
+                                type="date"
+                                id="atelierOrderDeliveryDate"
+                            >
+                        </div>
+
+                        <p id="atelierOrderMessage" role="status" aria-live="polite"></p>
+
+                        <div class="atelier-detail-actions">
+                            <button
+                                type="submit"
+                                class="primary-button"
+                                id="atelierOrderSubmitButton"
+                            >
+                                ارسال سفارش
+                            </button>
+
+                            <button
+                                type="button"
+                                class="secondary-button"
+                                id="atelierOrderCancelButton"
+                            >
+                                انصراف
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
+
+            </section>
+
+
+
+<!-- Independent Order Form -->
+<section id="orderFormView" class="content-section order-form-view" hidden>
+
+    <div class="order-form-header">
+        <h1>
+            <span id="orderFormCustomerName">مشتری عزیز</span>
+            گرامی
+        </h1>
+
+        <p>لطفاً فرم زیر را با دقت پر کنید.</p>
+    </div>
+
+    <div class="order-form-card">
+
+
+<!-- شماره اضطراری -->
+<div class="order-form-field">
+    <label for="orderEmergencyPhone">شماره اضطراری</label>
+    <input
+        type="tel"
+        id="orderEmergencyPhone"
+        placeholder="شماره تماس اضطراری"
+        autocomplete="off"
+        inputmode="tel"
+    >
+</div>
+
+<!-- تاریخ تحویل -->
+<div class="order-form-field">
+    <label for="orderDeliveryDate">تاریخ تحویل</label>
+  <input
+    type="text"
+    id="orderDeliveryDate"
+    placeholder="انتخاب تاریخ تحویل"
+    autocomplete="off"
+    readonly
+    data-jdp
+>
+</div>
+
+
+        <!-- ۱. سن -->
+        <div class="order-form-field">
+            <label for="orderCustomerAge">۱. سن</label>
+
+            <div class="order-form-age-input">
+                <input
+                    type="number"
+                    id="orderCustomerAge"
+                    min="1"
+                    max="120"
+                    placeholder="سن"
+                >
+                <span>سال</span>
+            </div>
+        </div>
+
+        <!-- ۲. سبک سفارش -->
+        <div class="order-form-field">
+            <label for="orderStyle">۲. سبک سفارش</label>
+            <input
+                type="text"
+                id="orderStyle"
+                placeholder="سبک موردنظر را وارد کنید"
+            >
+        </div>
+
+        <!-- ۳. مناسبت سفارش -->
+        <div class="order-form-field">
+            <label for="orderOccasion">۳. مناسبت سفارش</label>
+         <input
+    type="text"
+    id="orderOccasion"
+    autocomplete="off"
+    placeholder="مناسبت سفارش را وارد کنید"
+>
+        </div>
+
+
+<!-- ۴. فرم کلی لباس -->
+<div class="order-form-field order-clothing-types">
+    <label>۴. فرم کلی لباس</label>
+
+    <div class="order-clothing-options">
+
+        <label><input type="checkbox" name="orderClothingType" value="پیراهن مجلسی"> پیراهن مجلسی</label>
+        <label><input type="checkbox" name="orderClothingType" value="فرمالیته"> فرمالیته</label>
+        <label><input type="checkbox" name="orderClothingType" value="لباس عروس"> لباس عروس</label>
+
+        <label><input type="checkbox" name="orderClothingType" value="کت"> کت</label>
+        <label><input type="checkbox" name="orderClothingType" value="شلوار"> شلوار</label>
+        <label><input type="checkbox" name="orderClothingType" value="تاپ"> تاپ</label>
+
+        <label><input type="checkbox" name="orderClothingType" value="دامن"> دامن</label>
+        <label><input type="checkbox" name="orderClothingType" value="شومیز"> شومیز</label>
+        <label><input type="checkbox" name="orderClothingType" value="مانتو"> مانتو</label>
+
+        <label><input type="checkbox" name="orderClothingType" value="سارافون"> سارافون</label>
+        <label><input type="checkbox" name="orderClothingType" value="تاپلکس"> تاپلکس</label>
+        <label><input type="checkbox" name="orderClothingType" value="باکس"> باکس</label>
+
+        <label><input type="checkbox" name="orderClothingType" value="گن دوزی"> گن دوزی</label>
+
+    </div>
+</div>
+
+
+        <!-- ۵. نوع سفارش -->
+        <div class="order-form-field">
+            <label for="orderType">۵. نوع سفارش</label>
+          <input
+    type="text"
+    id="orderType"
+    autocomplete="off"
+    placeholder="نوع سفارش را وارد کنید"
+>
+        </div>
+
+        <!-- ۶ و ۷. تهیه پارچه و توضیحات -->
+        <div class="order-form-field order-fabric-row">
+            <label for="orderFabricProvider">۶. تهیه پارچه توسط</label>
+
+            <select id="orderFabricProvider">
+                <option value="">انتخاب کنید</option>
+                <option value="مزون">مزون</option>
+                <option value="مشتری">مشتری</option>
+            </select>
+
+            <label for="orderFabricDescription">۷. توضیحات</label>
+
+            <input
+                type="text"
+                id="orderFabricDescription"
+                placeholder="توضیحات تهیه پارچه"
+            >
+        </div>
+
+        <!-- ۸. جنس پارچه -->
+        <div class="order-form-field">
+            <label for="orderFabricType">۸. جنس پارچه</label>
+            <input
+                type="text"
+                id="orderFabricType"
+                placeholder="جنس پارچه را وارد کنید"
+            >
+        </div>
+
+        <!-- ۹. متریال -->
+        <div class="order-form-field">
+            <label for="orderMaterial">۹. متریال</label>
+            <select id="orderMaterial">
+                <option value="">انتخاب کنید</option>
+                <option value="دارد">دارد</option>
+                <option value="ندارد">ندارد</option>
+            </select>
+        </div>
+
+        <!-- ۱۰. آستر -->
+        <div class="order-form-field">
+            <label for="orderLining">۱۰. آستر</label>
+            <select id="orderLining">
+                <option value="">انتخاب کنید</option>
+                <option value="دارد">دارد</option>
+                <option value="ندارد">ندارد</option>
+            </select>
+        </div>
+
+        <!-- ۱۱. جواهردوزی -->
+        <div class="order-form-field">
+            <label for="orderBeadwork">۱۱. نیاز به جواهردوزی</label>
+            <select id="orderBeadwork">
+                <option value="">انتخاب کنید</option>
+                <option value="دارد">دارد</option>
+                <option value="ندارد">ندارد</option>
+            </select>
+        </div>
+
+        <!-- ۱۲. نقاشی روی پارچه -->
+        <div class="order-form-field">
+            <label for="orderFabricPainting">۱۲. نیاز به نقاشی روی پارچه</label>
+            <select id="orderFabricPainting">
+                <option value="">انتخاب کنید</option>
+                <option value="دارد">دارد</option>
+                <option value="ندارد">ندارد</option>
+            </select>
+        </div>
+
+        <!-- ۱۳. پارچه‌سازی -->
+        <div class="order-form-field">
+            <label for="orderFabricMaking">۱۳. نیاز به پارچه‌سازی</label>
+            <select id="orderFabricMaking">
+                <option value="">انتخاب کنید</option>
+                <option value="دارد">دارد</option>
+                <option value="ندارد">ندارد</option>
+            </select>
+        </div>
+
+    </div>
+
+
+<!-- Size Measurements Card -->
+<div class="order-size-card">
+
+    <div class="order-size-header">
+        <h2>سایز</h2>
+        <p>(همه سایزها به سانتی‌متر می‌باشند)</p>
+    </div>
+
+    <div class="order-size-grid">
+
+        <div class="order-size-field">
+            <label for="sizeShoulder">۱. سرشانه</label>
+            <input type="number" id="sizeShoulder" min="0" step="0.1">
+        </div>
+
+        <div class="order-size-field">
+            <label for="sizeNeck">۲. دور گردن</label>
+            <input type="number" id="sizeNeck" min="0" step="0.1">
+        </div>
+
+        <div class="order-size-field">
+            <label for="sizeBust">۳. دور سینه</label>
+            <input type="number" id="sizeBust" min="0" step="0.1">
+        </div>
+
+        <div class="order-size-field">
+            <label for="sizeArmhole">۴. دور آکاردمان</label>
+            <input type="number" id="sizeArmhole" min="0" step="0.1">
+        </div>
+
+        <div class="order-size-field">
+            <label for="sizeWaist">۵. دور کمر</label>
+            <input type="number" id="sizeWaist" min="0" step="0.1">
+        </div>
+
+        <div class="order-size-field">
+            <label for="sizeHip">۶. دور باسن</label>
+            <input type="number" id="sizeHip" min="0" step="0.1">
+        </div>
+
+        <div class="order-size-field">
+            <label for="sizeFrontBust">۷. پیش سینه</label>
+            <input type="number" id="sizeFrontBust" min="0" step="0.1">
+        </div>
+
+        <div class="order-size-field">
+            <label for="sizeBackBust">۸. پشت سینه</label>
+            <input type="number" id="sizeBackBust" min="0" step="0.1">
+        </div>
+
+        <div class="order-size-field">
+            <label for="sizeFrontWaist">۹. پیش شکم</label>
+            <input type="number" id="sizeFrontWaist" min="0" step="0.1">
+        </div>
+
+        <div class="order-size-field">
+            <label for="sizeBackWaist">۱۰. پشت شکم</label>
+            <input type="number" id="sizeBackWaist" min="0" step="0.1">
+        </div>
+
+        <div class="order-size-field">
+            <label for="sizeHipHeight">۱۱. بلندی باسن</label>
+            <input type="number" id="sizeHipHeight" min="0" step="0.1">
+        </div>
+
+        <div class="order-size-field">
+            <label for="sizeBustHeight">۱۲. بلندی سینه</label>
+            <input type="number" id="sizeBustHeight" min="0" step="0.1">
+        </div>
+
+        <div class="order-size-field">
+            <label for="sizeBustDistance">۱۳. فاصله سینه</label>
+            <input type="number" id="sizeBustDistance" min="0" step="0.1">
+        </div>
+
+        <div class="order-size-field">
+            <label for="sizeFrontWidth">۱۴. کارور پیش</label>
+            <input type="number" id="sizeFrontWidth" min="0" step="0.1">
+        </div>
+
+        <div class="order-size-field">
+            <label for="sizeBackWidth">۱۵. کارور پشت</label>
+            <input type="number" id="sizeBackWidth" min="0" step="0.1">
+        </div>
+
+        <div class="order-size-field">
+            <label for="sizeFrontBodyLength">۱۶. قد بالاتنه (جلو)</label>
+            <input type="number" id="sizeFrontBodyLength" min="0" step="0.1">
+        </div>
+
+        <div class="order-size-field">
+            <label for="sizeBackBodyLength">۱۷. قد بالاتنه (پشت)</label>
+            <input type="number" id="sizeBackBodyLength" min="0" step="0.1">
+        </div>
+
+        <div class="order-size-field">
+            <label for="sizeCoatNeckDepth">۱۸. بازی یقه کت</label>
+            <input type="number" id="sizeCoatNeckDepth" min="0" step="0.1">
+        </div>
+
+        <div class="order-size-field">
+            <label for="sizeShirtNeckDepth">۱۹. بازی یقه پیراهن</label>
+            <input type="number" id="sizeShirtNeckDepth" min="0" step="0.1">
+        </div>
+
+        <div class="order-size-field">
+            <label for="sizeBackNeckDepth">۲۰. بازی یقه پشت</label>
+            <input type="number" id="sizeBackNeckDepth" min="0" step="0.1">
+        </div>
+
+        <div class="order-size-field">
+            <label for="sizeArmLength">۲۱. قد آستین</label>
+            <input type="number" id="sizeArmLength" min="0" step="0.1">
+        </div>
+
+        <div class="order-size-field">
+            <label for="sizeArmCircumference">۲۲. دور بازو</label>
+            <input type="number" id="sizeArmCircumference" min="0" step="0.1">
+        </div>
+
+        <div class="order-size-field">
+            <label for="sizeWrist">۲۳. دور مچ</label>
+            <input type="number" id="sizeWrist" min="0" step="0.1">
+        </div>
+
+        <div class="order-size-field">
+            <label for="sizeShoulderToModel">۲۴. سرشانه تا مدل</label>
+            <input type="number" id="sizeShoulderToModel" min="0" step="0.1">
+        </div>
+
+        <div class="order-size-field">
+            <label for="sizeShoulderToFish">۲۵. سرشانه تا ماهی</label>
+            <input type="number" id="sizeShoulderToFish" min="0" step="0.1">
+        </div>
+
+        <div class="order-size-field">
+            <label for="sizeCoatLength">۲۶. قد کت</label>
+            <input type="number" id="sizeCoatLength" min="0" step="0.1">
+        </div>
+
+        <div class="order-size-field">
+            <label for="sizeSkirtLength">۲۷. قد دامن</label>
+            <input type="number" id="sizeSkirtLength" min="0" step="0.1">
+        </div>
+
+        <div class="order-size-field">
+            <label for="sizeDressLength">۲۸. قد پیراهن</label>
+            <input type="number" id="sizeDressLength" min="0" step="0.1">
+        </div>
+
+        <div class="order-size-field">
+            <label for="sizeTrainLength">۲۹. کمر تا دنباله</label>
+            <input type="number" id="sizeTrainLength" min="0" step="0.1">
+        </div>
+
+        <div class="order-size-field">
+            <label for="sizePantsWaist">۳۰. دور کمر شلوار</label>
+            <input type="number" id="sizePantsWaist" min="0" step="0.1">
+        </div>
+
+        <div class="order-size-field">
+            <label for="sizeThigh">۳۱. دور ران</label>
+            <input type="number" id="sizeThigh" min="0" step="0.1">
+        </div>
+
+        <div class="order-size-field">
+            <label for="sizeKnee">۳۲. دور زانو</label>
+            <input type="number" id="sizeKnee" min="0" step="0.1">
+        </div>
+
+        <div class="order-size-field">
+            <label for="sizePantsHem">۳۳. دمپا شلوار</label>
+            <input type="number" id="sizePantsHem" min="0" step="0.1">
+        </div>
+
+        <div class="order-size-field">
+            <label for="sizePantsLength">۳۴. قد شلوار</label>
+            <input type="number" id="sizePantsLength" min="0" step="0.1">
+        </div>
+
+    </div>
+</div>
+
+    <div class="demo-form-actions">
+        <button type="button" class="primary-button" id="demoOrderSaveButton">ثبت آزمایشی فرم</button>
+        <button type="button" class="secondary-button" id="demoOrderResetButton">پاک کردن فرم</button>
+    </div>
+    <p id="demoOrderFormMessage" role="status" aria-live="polite"></p>
+
+</section>
+
+
+
+            <!-- Customer Profile -->
+            <section id="profileView" class="content-section" hidden>
+
+                <div class="section-heading">
+                    <div>
+                        <span class="eyebrow">حساب کاربری روبان</span>
+                        <h2>پروفایل من</h2>
+                    </div>
+                </div>
+
+                <div class="profile-card">
+
+                   
+<div class="profile-avatar-section">
+
+    <div class="profile-avatar-wrapper">
+        <div class="user-avatar large" id="profileAvatar">م</div>
+
+        <img
+            id="profileAvatarImage"
+            class="profile-avatar-image"
+            alt="تصویر پروفایل مشتری"
+            hidden
+        >
+    </div>
+
+    <div class="profile-avatar-info">
+        <h3 id="profileDisplayName">مشتری عزیز</h3>
+        <p>اطلاعات حساب کاربری شما</p>
+
+        <div class="profile-avatar-actions">
+            <input
+                type="file"
+                id="profileAvatarInput"
+                accept="image/jpeg,image/png,image/webp"
+                hidden
+            >
+
+            <button
+                type="button"
+                class="secondary-button"
+                id="profileAvatarSelectButton"
+            >
+                انتخاب تصویر
+            </button>
+
+            <button
+                type="button"
+                class="secondary-button"
+                id="profileAvatarDeleteButton"
+                hidden
+            >
+                حذف تصویر
+            </button>
+        </div>
+
+        <small>فرمت مجاز: JPG، PNG و WebP — حداکثر ۳ مگابایت</small>
+
+        <p
+            id="profileAvatarMessage"
+            role="status"
+            aria-live="polite"
+        ></p>
+    </div>
+
+</div>
+
+
+                    <div class="profile-form">
+
+                        <div class="form-group">
+<label for="profileName">نام و نام خانوادگی</label>
+                            <input
+                                type="text"
+                                id="profileName"
+                                maxlength="100"
+                                autocomplete="name"
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="profilePhone">شماره موبایل</label>
+                            <input
+                                type="tel"
+                                id="profilePhone"
+                                readonly
+                                disabled
+                            >
+                            <small>شماره موبایل قابل تغییر مستقیم نیست.</small>
+                        </div>
+
+                        <div class="form-group">
+<label for="profileEmail">ایمیل (اختیاری)</label>
+                            <input
+                                type="email"
+                                id="profileEmail"
+                                maxlength="254"
+                                autocomplete="email"
+                            >
+                        </div>
+
+                        <p id="profileMessage" role="status" aria-live="polite"></p>
+
+                       <div class="profile-form-actions">
+
+    <button
+        type="button"
+        class="primary-button"
+        id="profileSaveButton"
+    >
+        ذخیره تغییرات
+    </button>
+
+    <button
+        type="button"
+        class="secondary-button"
+        id="profileCancelButton"
+    >
+        انصراف
+    </button>
+
+</div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </main>
+    </div>
+
+    <script src="https://unpkg.com/@majidh1/jalalidatepicker/dist/jalalidatepicker.min.js"></script>
+    <script src="js/demo.js"></script>
+    <script>
+        if (window.jalaliDatepicker) {
+            jalaliDatepicker.startWatch({ date: true, time: false, persianDigits: true });
+        }
+    </script>
+
+</body>
+</html>
